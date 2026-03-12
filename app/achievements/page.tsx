@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ProjectGrid from "@/components/portfolio/ProjectGrid";
 import { projects } from "@/data/projects";
 
@@ -36,7 +37,7 @@ export default function AchievementsPage() {
             </p>
           </div>
 
-          <ProjectGrid projects={projects} />
+          <Suspense fallback={<div className="mt-10 text-center text-sm text-[var(--color-secondary-text)]">Loading projects...</div>}><ProjectGrid projects={projects} /></Suspense>
         </div>
       </section>
     </main>
