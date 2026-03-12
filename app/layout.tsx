@@ -1,18 +1,11 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import VisitTracker from "@/components/analytics/VisitTracker";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-main",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: {
@@ -32,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
-      <body className={`${inter.variable} min-h-screen bg-[var(--color-bg)] text-[var(--color-primary)] antialiased`}>
+      <body className="min-h-screen bg-[var(--color-bg)] text-[var(--color-primary)] antialiased">
         <VisitTracker />
         <SmoothScroll>
           <ScrollProgress />

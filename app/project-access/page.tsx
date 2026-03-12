@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Lock, ShieldCheck } from "lucide-react";
 import { getProjectById } from "@/data/projects";
 import { isPrivateProject } from "@/lib/privateProjects";
@@ -9,8 +8,13 @@ import { isPrivateProject } from "@/lib/privateProjects";
 type LoginState = "idle" | "sending" | "error";
 
 export default function ProjectAccessPage() {
-  const searchParams = useSearchParams();
-  const projectId = searchParams.get("project");
+  const [projectId, setProjectId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    setProjectId(params.get("project"));
+  }, []);
 
   const project = useMemo(() => {
     if (!projectId) return null;
