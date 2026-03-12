@@ -138,6 +138,7 @@ export default function NewsletterSlider({ compact = false }: { compact?: boolea
         link: mediumProfile,
         image:
           "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=600&auto=format&fit=crop",
+        pubDate: "", // FIXED: Added pubDate to satisfy NewsletterItem type
         source: "Medium",
         excerpt:
           "Visit my Medium profile to explore more articles, tutorials, and deep dives into technology and design.",
@@ -221,9 +222,9 @@ export default function NewsletterSlider({ compact = false }: { compact?: boolea
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5"
             >
-              {(loading ? Array.from({ length: 4 }) : pages[activePage]).map((item, idx) => {
-                if (loading) {
-                  return (
+              {loading
+                ? /* Loading Skeletons */
+                  Array.from({ length: ITEMS_PER_PAGE }).map((_, idx) => (
                     <div
                       key={idx}
                       className="flex h-full flex-col overflow-hidden rounded-lg border border-[var(--color-border)] bg-white p-3 sm:p-4"
@@ -233,74 +234,77 @@ export default function NewsletterSlider({ compact = false }: { compact?: boolea
                       <div className="mt-2 h-3 w-full animate-pulse rounded-md bg-[var(--color-surface-muted)]" />
                       <div className="mt-2 h-3 w-1/2 animate-pulse rounded-md bg-[var(--color-surface-muted)]" />
                     </div>
-                  );
-                }
+                  ))
+                : /* Actual Content */
+                  pages[activePage]?.map((item, idx) => {
+                    const date = formatDate(item.pubDate);
+                    const read = item.readingTimeMins
+                      ? `${item.readingTimeMins} min read`
+                      : "";
 
-                const date = formatDate(item.pubDate);
-                const read = item.readingTimeMins ? `${item.readingTimeMins} min read` : "";
-
-                return (
-                  <a
-                    key={`${item.link}-${idx}`}
-                    href={item.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-[var(--color-border)] bg-white transition-all duration-300 hover:-translate-y-1 hover:bg-[#F8FAFC] hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)]"
-                  >
-                    {/* Image */}
-                    <div className="relative m-1.5 mb-0 h-32 overflow-hidden rounded-lg bg-[var(--color-surface-muted)]">
-                      <img
-                        src={item.image || "/projects/news2.png"}
-                        alt={item.title}
-                        className="h-full w-full rounded-lg object-cover transition-all duration-500 group-hover:scale-105"
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-transparent to-transparent" />
-
-                      {read && (
-                        <div className="absolute right-2 top-2 rounded-full border border-[var(--color-border)] bg-white/95 px-2 py-1 text-[9px] font-semibold uppercase tracking-widest text-[var(--color-secondary-text)]">
-                          {read}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex flex-1 flex-col p-4 pt-3">
-                      <div className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-[var(--color-secondary-text)]">
-                        <BookOpen size={12} className="text-[var(--color-accent)]" />
-                        <span className="truncate">
-                          {date || (item._placeholder ? "Always Available" : "Recent")}
-                        </span>
-                      </div>
-
-                      <h3 className="mb-1.5 line-clamp-2 text-base font-semibold leading-snug text-[var(--color-primary)] transition-colors group-hover:text-[var(--color-accent)]">
-                        {item.title}
-                      </h3>
-
-                      {item.excerpt && (
-                        <p className="mb-4 flex-grow line-clamp-2 text-xs leading-relaxed text-[var(--color-body-text)] sm:text-sm">
-                          {item.excerpt}
-                        </p>
-                      )}
-
-                      <div className="mt-auto border-t border-[var(--color-border)] pt-3">
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--color-accent)] transition-colors group-hover:text-[var(--color-accent-hover)]">
-                          <span className="relative">
-                            Read on Medium
-                            <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-[var(--color-accent)] transition-all duration-300 group-hover:w-full" />
-                          </span>
-                          <ExternalLink
-                            size={12}
-                            className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    return (
+                      <a
+                        key={`${item.link}-${idx}`}
+                        href={item.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-[var(--color-border)] bg-white transition-all duration-300 hover:-translate-y-1 hover:bg-[#F8FAFC] hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)]"
+                      >
+                        {/* Image */}
+                        <div className="relative m-1.5 mb-0 h-32 overflow-hidden rounded-lg bg-[var(--color-surface-muted)]">
+                          <img
+                            src={item.image || "/projects/news2.png"}
+                            alt={item.title}
+                            className="h-full w-full rounded-lg object-cover transition-all duration-500 group-hover:scale-105"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
                           />
-                        </span>
-                      </div>
-                    </div>
-                  </a>
-                );
-              })}
+                          <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-transparent to-transparent" />
+
+                          {read && (
+                            <div className="absolute right-2 top-2 rounded-full border border-[var(--color-border)] bg-white/95 px-2 py-1 text-[9px] font-semibold uppercase tracking-widest text-[var(--color-secondary-text)]">
+                              {read}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex flex-1 flex-col p-4 pt-3">
+                          <div className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-[var(--color-secondary-text)]">
+                            <BookOpen size={12} className="text-[var(--color-accent)]" />
+                            <span className="truncate">
+                              {date ||
+                                (item._placeholder ? "Always Available" : "Recent")}
+                            </span>
+                          </div>
+
+                          <h3 className="mb-1.5 line-clamp-2 text-base font-semibold leading-snug text-[var(--color-primary)] transition-colors group-hover:text-[var(--color-accent)]">
+                            {item.title}
+                          </h3>
+
+                          {item.excerpt && (
+                            <p className="mb-4 flex-grow line-clamp-2 text-xs leading-relaxed text-[var(--color-body-text)] sm:text-sm">
+                              {item.excerpt}
+                            </p>
+                          )}
+
+                          <div className="mt-auto border-t border-[var(--color-border)] pt-3">
+                            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--color-accent)] transition-colors group-hover:text-[var(--color-accent-hover)]">
+                              <span className="relative">
+                                Read on Medium
+                                <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-[var(--color-accent)] transition-all duration-300 group-hover:w-full" />
+                              </span>
+                              <ExternalLink
+                                size={12}
+                                className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                              />
+                            </span>
+                          </div>
+                        </div>
+                      </a>
+                    );
+                  })}
             </motion.div>
           </AnimatePresence>
         </div>
