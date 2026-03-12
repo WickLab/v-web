@@ -5,6 +5,7 @@ export const projects: Project[] = [
   {
     id: "ads-plane-feeder",
     privateContent: true,
+    description: vvv,
     title: "ADS Plane Feeder",
     tagline: "A 24/7 Raspberry Pi edge device for live aircraft telemetry ingestion and feeder monitoring.",
     category: "IoT / Edge Computing / Aviation Data",
@@ -46,6 +47,7 @@ export const projects: Project[] = [
   {
     id: "digital-wardrobe",
     privateContent: true,
+    description: vvv,
     title: "Wardrobe - My Outfits",
     tagline: "A digital wardrobe planner for outfit organization, event styling, and AI-assisted clothing decisions.",
     category: "Fashion Tech / Product Design",
@@ -82,6 +84,7 @@ export const projects: Project[] = [
   {
     id: "digital-dreamers-shift-drop",
     title: "Digital Dreamers - Shift Drop",
+    description: vvv,
     tagline: "A collaborative scheduling and shift handoff platform for smoother team operations.",
     category: "Business / Workforce Operations",
     problem:
@@ -110,6 +113,7 @@ export const projects: Project[] = [
   {
     id: "vending-machine",
     privateContent: true,
+    description: vvv,
     title: "Vending Easier You",
     tagline: "A smart vending concept focused on easier product access, inventory visibility, and automated sales flow.",
     category: "IoT / Smart Retail",
@@ -146,6 +150,7 @@ export const projects: Project[] = [
   {
     id: "greenloop",
     privateContent: true,
+    description: vvv,
     title: "Bottlo - GreenLoop",
     tagline: "A recycling pickup and rewards platform for household waste collection and sustainability engagement.",
     category: "Sustainability / Circular Economy",
@@ -181,6 +186,7 @@ export const projects: Project[] = [
   },
   {
     id: "elephant-ai-gps-tracking-belt",
+    description: vvv,
     title: "Elephant AI GPS Tracking Belt",
     tagline: "A wildlife-focused GPS tracking concept for monitoring elephant movement, safety, and location intelligence.",
     category: "IoT / Wildlife Conservation / AI",
@@ -217,6 +223,7 @@ export const projects: Project[] = [
   {
     id: "self-driving-drone",
     privateContent: true,
+    description: vvv,
     title: "Self Driving Drone",
     tagline: "An autonomous drone prototype for waypoint navigation, telemetry logging, and safer mission repeatability.",
     category: "Autonomous Systems / Robotics",
@@ -253,6 +260,7 @@ export const projects: Project[] = [
   {
     id: "holographic-eye",
     privateContent: true,
+    description: vvv,
     title: "Holographic Eye",
     tagline: "A futuristic interface concept blending spatial feedback, focus states, and immersive visual interaction.",
     category: "UI/UX Design / Spatial Interfaces",
@@ -282,6 +290,7 @@ export const projects: Project[] = [
   {
     id: "maths-tutor-program",
     title: "Maths Tutor Program",
+    description: vvv,
     tagline: "An adaptive tutoring system for personalized math practice, progress tracking, and guided improvement.",
     category: "Education Technology",
     problem:
@@ -310,6 +319,7 @@ export const projects: Project[] = [
   {
     id: "pareza-cleaning",
     title: "Pareza Cleaning",
+    description: vvv,
     tagline: "A service business platform for cleaning bookings, requests, and operational scheduling visibility.",
     category: "Web Development / Service Operations",
     problem:
@@ -338,6 +348,7 @@ export const projects: Project[] = [
   {
     id: "dilsena-gem-exporter",
     title: "Dilsena Gem Exporter",
+    description: vvv,
     tagline: "An export-facing gemstone catalog and buyer inquiry platform built for trust and clarity.",
     category: "Business / Entrepreneurial Projects",
     problem:
@@ -366,6 +377,7 @@ export const projects: Project[] = [
   {
     id: "master-captain-web",
     title: "Master Captain Web",
+    description: vvv,
     tagline: "A leadership-focused digital brand platform with modular structure and scalable storytelling.",
     category: "Web Development / Personal Brand",
     problem:
@@ -394,6 +406,7 @@ export const projects: Project[] = [
   {
     id: "lanka-harvest-hub",
     title: "LankaHarvest Hub",
+    description: vvv,
     tagline: "An agricultural export platform connecting Sri Lankan farmers with Australian buyers.",
     category: "Web Development / AgriTech / Export",
     problem:
