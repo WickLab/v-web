@@ -15,7 +15,7 @@ export default function ProjectCard({
   const isPrivate = Boolean(project.privateContent);
   const categoryLabel = getProjectCategoryLabel(project.category);
 
-  const handleKeyDown = (event: KeyboardEvent<article>) => {
+ const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       onOpen();
