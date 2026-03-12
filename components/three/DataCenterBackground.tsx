@@ -460,6 +460,7 @@ function BinaryUnicodeRain() {
 
 function QuantumWaves() {
   const group = useRef<THREE.Group>(null);
+  const ThreeLine: any = "line";
 
   const mat = useMemo(
     () =>
@@ -510,9 +511,9 @@ function QuantumWaves() {
 
   return (
     <group ref={group} position={[0.65, 0.15, 0]}>
-      <line geometry={g1} material={mat} />
-      <line geometry={g2} material={mat} />
-      <line geometry={g3} material={mat} />
+      <ThreeLine geometry={g1} material={mat} />
+      <ThreeLine geometry={g2} material={mat} />
+      <ThreeLine geometry={g3} material={mat} />
     </group>
   );
 }
