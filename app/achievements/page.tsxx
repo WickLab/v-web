@@ -1,0 +1,223 @@
+"use client";
+
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  TrendingUp,
+  Users,
+  Zap,
+  ShieldCheck,
+  ArrowRight,
+  Lightbulb,
+  BookOpen,
+  Target,
+  Github,
+  ExternalLink,
+  Lock,
+  X,
+  Mail,
+  Maximize,
+} from "lucide-react";
+
+// 1. IMPORT YOUR REAL DATA
+import { projects } from "@/data/projects";
+import Link from "next/link";
+
+const useReveal = () => {
+  const [revealed, setRevealed] = React.useState(false);
+  const ref = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealed(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, revealed] as const;
+};
+
+// ... (Keep PageHeader and KeyAchievements exactly as you had them)
+
+const ProjectModal = ({
+  project,
+  onClose,
+}: {
+  project: typeof projects[0] | null;
+  onClose: () => void;
+}) => {
+  React.useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = "auto"; };
+  }, []);
+
+  if (!project) return null;
+
+  // This determines the link based on whether it is private or public
+  const fullProjectLink = project.privateContent 
+    ? `/project-access?next=/projects/${project.id}` 
+    : `/projects/${project.id}`;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97, y: 16 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.97, y: 16 }}
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-3xl max-h-[92vh] bg-white border border-[var(--color-border)] rounded-lg shadow-xl flex flex-col overflow-hidden"
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 z-30 p-2 rounded-full bg-white border border-[var(--color-border)] text-[var(--color-secondary-text)] hover:text-[var(--color-primary)] transition-all">
+          <X size={20} />
+        </button>
+
+        <div className="flex-1 overflow-y-auto">
+          {/* Project Image Header */}
+          <div className="relative w-full h-52 sm:h-64 bg-[var(--color-surface-muted)] flex items-center justify-center shrink-0 border-b border-[var(--color-border)]">
+            <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/20 to-transparent z-20" />
+            <div className="absolute bottom-6 left-6 z-30">
+              <span className="inline-block px-3 py-1 rounded-full border border-[var(--color-border)] bg-white text-[10px] font-bold uppercase tracking-widest text-[var(--color-secondary-text)] mb-3">
+                {project.category}
+              </span>
+              <h2 className="text-3xl font-bold text-[var(--color-primary)] tracking-tight">{project.title}</h2>
+            </div>
+          </div>
+
+          <div className="p-6 md:p-10">
+            <p className="text-lg text-[var(--color-body-text)] mb-8 leading-relaxed font-medium">
+              {project.tagline}
+            </p>
+
+            <div className="grid sm:grid-cols-2 gap-8 mb-10">
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-xs font-bold tracking-widest text-[var(--color-accent)] uppercase mb-2">The Problem</h4>
+                  <p className="text-sm leading-relaxed">{project.problem}</p>
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold tracking-widest text-[var(--color-accent)] uppercase mb-2">The Solution</h4>
+                  <p className="text-sm leading-relaxed">{project.solution}</p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-xs font-bold tracking-widest text-[var(--color-secondary-text)] uppercase mb-3">Technologies</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech.map((t) => (
+                      <span key={t} className="rounded-full border border-[var(--color-border)] bg-[var(--color-tag-bg)] px-3 py-1 text-xs font-medium text-[var(--color-accent)]">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Link Footer */}
+            <div className="pt-8 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-4">
+               <div className="flex gap-4">
+                  {project.github && !project.privateContent && (
+                    <a href={project.github} target="_blank" className="flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)]">
+                      <Github size={18} /> GitHub
+                    </a>
+                  )}
+               </div>
+               
+               <Link
+                href={fullProjectLink}
+                className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[var(--color-primary)] text-white font-semibold hover:opacity-90 transition-all w-full sm:w-auto group"
+              >
+                <Maximize size={16} />
+                View Detailed Case Study
+              </Link>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+const AllProjects = () => {
+  const [refHeader, isVisible] = useReveal();
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+
+  // 2. DYNAMICALLY GENERATE FILTERS FROM REAL DATA
+  const filters = useMemo(() => {
+    const set = new Set(projects.map((p) => p.category));
+    return ["All", ...Array.from(set)];
+  }, []);
+
+  const filteredProjects = useMemo(() => {
+    if (activeFilter === "All") return projects;
+    return projects.filter((p) => p.category === activeFilter);
+  }, [activeFilter]);
+
+  return (
+    <section className="py-20 bg-[var(--color-surface-muted)]">
+      <div className="max-w-[1200px] mx-auto px-6">
+        <div ref={refHeader} className={`text-center mb-16 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+          <h2 className="text-[36px] font-semibold mb-4 text-[var(--color-primary)]">Selected Portfolio</h2>
+          <div className="flex flex-wrap justify-center gap-2 mt-8">
+            {filters.map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setActiveFilter(filter)}
+                className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${activeFilter === filter ? "bg-[var(--color-accent)] text-white" : "bg-white text-[var(--color-secondary-text)] border border-[var(--color-border)]"}`}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {filteredProjects.map((proj) => (
+            <div
+              key={proj.id}
+              onClick={() => setSelectedProject(proj)}
+              className="group p-6 rounded-lg bg-white border border-[var(--color-border)] hover:shadow-xl transition-all cursor-pointer"
+            >
+              <div className="h-48 overflow-hidden rounded-lg mb-6 border border-[var(--color-border)]">
+                <img src={proj.image} alt={proj.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-2">{proj.title}</h3>
+              <p className="text-sm text-[var(--color-body-text)] mb-4 line-clamp-2">{proj.tagline}</p>
+              
+              {proj.privateContent && (
+                <div className="mb-4">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--color-tag-bg)] text-[10px] font-bold text-[var(--color-accent)] uppercase border border-[var(--color-border)]">
+                    <Lock size={10} /> Secure Gateway
+                  </span>
+                </div>
+              )}
+              
+              <div className="flex items-center justify-between pt-4 border-t border-[var(--color-border)]">
+                <span className="text-sm font-bold text-[var(--color-accent)] flex items-center gap-1">
+                  Details <ArrowRight size={14} />
+                </span>
+                <span className="text-[10px] text-[var(--color-secondary-text)] uppercase font-bold tracking-widest">{proj.category}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <AnimatePresence>
+          {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
+        </AnimatePresence>
+      </div>
+    </section>
+  );
+};
+
+// ... (Keep LessonsLearned and Page Export)
