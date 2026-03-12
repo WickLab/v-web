@@ -3,7 +3,7 @@ export type ProjectCategory = string;
 export type Project = {
   id: string;
   title: string;
-  description?: strong;
+  description: strong;
   tagline: string;
   category: ProjectCategory;
   problem: string;
